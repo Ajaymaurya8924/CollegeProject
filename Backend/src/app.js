@@ -5,9 +5,11 @@ const projectRoute=require("./routes/project.route")
 const cors = require("cors");
 const app=express()
 
-
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [
+        "http://localhost:5173",
+        "https://collegeproject-1-xfsc.onrender.com"
+    ],
     credentials: true
 }));
 
