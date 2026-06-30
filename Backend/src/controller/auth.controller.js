@@ -20,19 +20,24 @@ async function register(req, res) {
         role: user.role
     }, process.env.JWT_TOKEN)
 
-    res.cookie("token", token)
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? "none" : "lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
 
 
-res.status(200).json({
-    message: "User registered successfully",
-    user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-    }
-})
+    res.status(200).json({
+        message: "User registered successfully",
+        user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+        }
+    })
 
 }
 
@@ -60,7 +65,12 @@ async function login(req, res) {
         role: user.role
     }, process.env.JWT_TOKEN)
 
-    res.cookie("token", token)
+    res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+    });
 
     res.status(200).json({
         message: "User Log in sucessfully",
@@ -143,7 +153,11 @@ async function allTeacher(req, res) {
 
 async function logout(req, res) {
 
-    res.clearCookie("token");
+    res.clearCookie("token", {
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
+    });
 
     res.status(200).json({
         message: "Logout Successfully"
@@ -153,4 +167,4 @@ async function logout(req, res) {
 
 
 
-module.exports = { register, login, dashboard,allTeacher,logout }
+module.exports = { register, login, dashboard, allTeacher, logout }
